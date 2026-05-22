@@ -62,7 +62,7 @@ selectedPlan.dataset.plan;
 
 const response = await fetch(
 
-"http://localhost:5000/create-order",
+"https://fitness-registration.onrender.com/create-order",
 
 {
 
