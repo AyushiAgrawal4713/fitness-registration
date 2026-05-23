@@ -1,300 +1,236 @@
 // PLAN CARD SELECTION
 
-const plans =
-document.querySelectorAll(".plan-card");
+const plans = document.querySelectorAll(".plan-card");
 
-plans.forEach((plan)=>{
+plans.forEach((plan) => {
+  plan.addEventListener("click", () => {
+    plans.forEach((p) => {
+      p.classList.remove("selected");
 
-plan.addEventListener("click",()=>{
+      p.style.opacity = "0.4";
+    });
 
-plans.forEach((p)=>{
+    plan.classList.add("selected");
 
-p.classList.remove("selected");
-
-p.style.opacity = "0.4";
-
-});
-
-plan.classList.add("selected");
-
-plan.style.opacity = "1";
-
-});
-
+    plan.style.opacity = "1";
+  });
 });
 
 // FORM SUBMIT
 
 document
-.getElementById("fitnessForm")
+  .getElementById("fitnessForm")
 
-.addEventListener("submit",
+  .addEventListener(
+    "submit",
 
-async function(e){
+    async function (e) {
+      e.preventDefault();
 
-e.preventDefault();
+      // SELECT PLAN
 
-// SELECT PLAN
+      const selectedPlan = document.querySelector('input[name="plan"]:checked');
 
-const selectedPlan =
-document.querySelector(
-'input[name="plan"]:checked'
-);
+      // VALIDATION
 
-// VALIDATION
+      if (!selectedPlan) {
+        alert("Please select a plan");
 
-if(!selectedPlan){
+        return;
+      }
 
-alert("Please select a plan");
+      // PLAN DETAILS
 
-return;
+      const amount = selectedPlan.value;
 
-}
+      const planName = selectedPlan.dataset.plan;
 
-// PLAN DETAILS
+      // FORM VALUES
 
-const amount =
-selectedPlan.value;
+      const fullName = document.querySelector(
+        'input[placeholder="Full Name"]',
+      ).value;
 
-const planName =
-selectedPlan.dataset.plan;
+      const phone = document.querySelector(
+        'input[placeholder="WhatsApp Number"]',
+      ).value;
 
-// FORM VALUES
+      const email = document.querySelector(
+        'input[placeholder="Email Address"]',
+      ).value;
 
-const fullName =
-document.querySelector(
-'input[placeholder="Full Name"]'
-).value;
+      const goal = document.querySelector("select").value;
 
-const phone =
-document.querySelector(
-'input[placeholder="WhatsApp Number"]'
-).value;
+      // GOOGLE SHEET URL
 
-const email =
-document.querySelector(
-'input[placeholder="Email Address"]'
-).value;
+      const sheetURL =
+        "https://script.google.com/macros/s/AKfycbyNu5eVOOzXgrnye9HEUncXibSQX2szTX8UJSGg41l0ItjDdkRwa24iaY8Xw8jmJ_PZ0w/exec";
 
-const goal =
-document.querySelectorAll("select")[1].value;
+      // SAVE PENDING LEAD
 
-// GOOGLE SHEET URL
+      try {
+        console.log({
+          name: fullName,
+          phone: phone,
+          email: email,
+          goal: goal,
+          plan: planName,
+        });
+        await fetch(sheetURL, {
+          method: "POST",
 
-const sheetURL =
-"https://script.google.com/macros/s/AKfycbyNu5eVOOzXgrnye9HEUncXibSQX2szTX8UJSGg41l0ItjDdkRwa24iaY8Xw8jmJ_PZ0w/exec";
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-// SAVE PENDING LEAD
+          body: JSON.stringify({
+            name: fullName,
 
-try{
+            phone: phone,
 
-console.log("Saving Pending Lead");
+            email: email,
 
-await fetch(sheetURL,{
+            goal: goal,
 
-method:"POST",
+            plan: planName,
 
-headers:{
-"Content-Type":"application/json"
-},
+            status: "Pending",
 
-body: JSON.stringify({
+            payment_id: "",
+          }),
+        });
 
-name: fullName,
+        console.log("Pending Saved");
+      } catch (error) {
+        console.log("Pending Error:", error);
+      }
 
-phone: phone,
+      // CREATE ORDER
 
-email: email,
+      const response = await fetch(
+        "https://fitness-registration.onrender.com/create-order",
 
-goal: goal,
+        {
+          method: "POST",
 
-plan: planName,
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-status:"Pending",
+          body: JSON.stringify({
+            amount: amount,
+          }),
+        },
+      );
 
-payment_id:""
+      // ORDER RESPONSE
 
-})
+      const order = await response.json();
 
-});
+      // RAZORPAY OPTIONS
 
-console.log("Pending Saved");
+      const options = {
+        key: "rzp_test_SsJ41JxFErdV4O",
 
-}catch(error){
+        amount: order.amount,
 
-console.log(
-"Pending Error:",
-error
-);
+        currency: "INR",
 
-}
+        name: "Fitness Coaching",
 
-// CREATE ORDER
+        description: planName,
 
-const response =
-await fetch(
+        order_id: order.id,
 
-"https://fitness-registration.onrender.com/create-order",
+        theme: {
+          color: "#000000",
+        },
 
-{
+        // PAYMENT SUCCESS
 
-method:"POST",
+        handler: async function (response) {
+          try {
+            await fetch(sheetURL, {
+              method: "POST",
 
-headers:{
-"Content-Type":"application/json"
-},
+              headers: {
+                "Content-Type": "application/json",
+              },
 
-body: JSON.stringify({
+              body: JSON.stringify({
+                name: fullName,
 
-amount: amount
+                phone: phone,
 
-})
+                email: email,
 
-}
+                goal: goal,
 
-);
+                plan: planName,
 
-// ORDER RESPONSE
+                status: "Paid",
 
-const order =
-await response.json();
+                payment_id: response.razorpay_payment_id,
+              }),
+            });
 
-// RAZORPAY OPTIONS
+            console.log("Paid Saved");
+          } catch (error) {
+            console.log("Paid Error:", error);
+          }
 
-const options = {
+          alert("Payment Successful");
 
-key:"rzp_test_SsJ41JxFErdV4O",
+          window.location.href = "thankyou.html";
+        },
+      };
 
-amount: order.amount,
+      // OPEN PAYMENT
 
-currency:"INR",
+      const rzp = new Razorpay(options);
 
-name:"Fitness Coaching",
+      // PAYMENT FAILED
 
-description: planName,
+      rzp.on(
+        "payment.failed",
 
-order_id: order.id,
+        async function (response) {
+          try {
+            await fetch(sheetURL, {
+              method: "POST",
 
-theme:{
-color:"#000000"
-},
+              headers: {
+                "Content-Type": "application/json",
+              },
 
-// PAYMENT SUCCESS
+              body: JSON.stringify({
+                name: fullName,
 
-handler: async function(response){
+                phone: phone,
 
-try{
+                email: email,
 
-await fetch(sheetURL,{
+                goal: goal,
 
-method:"POST",
+                plan: planName,
 
-headers:{
-"Content-Type":"application/json"
-},
+                status: "Failed",
 
-body: JSON.stringify({
+                payment_id: "",
+              }),
+            });
 
-name: fullName,
+            console.log("Failed Saved");
+          } catch (error) {
+            console.log("Failed Error:", error);
+          }
 
-phone: phone,
+          alert("Payment Failed");
+        },
+      );
 
-email: email,
+      // OPEN POPUP
 
-goal: goal,
-
-plan: planName,
-
-status:"Paid",
-
-payment_id:
-response.razorpay_payment_id
-
-})
-
-});
-
-console.log("Paid Saved");
-
-}catch(error){
-
-console.log(
-"Paid Error:",
-error
-);
-
-}
-
-alert("Payment Successful");
-
-window.location.href =
-"thankyou.html";
-
-}
-
-};
-
-// OPEN PAYMENT
-
-const rzp =
-new Razorpay(options);
-
-// PAYMENT FAILED
-
-rzp.on(
-'payment.failed',
-
-async function(response){
-
-try{
-
-await fetch(sheetURL,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body: JSON.stringify({
-
-name: fullName,
-
-phone: phone,
-
-email: email,
-
-goal: goal,
-
-plan: planName,
-
-status:"Failed",
-
-payment_id:""
-
-})
-
-});
-
-console.log("Failed Saved");
-
-}catch(error){
-
-console.log(
-"Failed Error:",
-error
-);
-
-}
-
-alert("Payment Failed");
-
-}
-
-);
-
-// OPEN POPUP
-
-rzp.open();
-
-});
+      rzp.open();
+    },
+  );
