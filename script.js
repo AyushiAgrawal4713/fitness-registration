@@ -107,11 +107,47 @@ theme:{
 color:"#000000"
 },
 
-handler:function(response){
+handler: async function(response){
+
+await fetch(
+"https://script.google.com/macros/s/AKfycbyKGHI4MTKBTyR9dp5VDsgo-jbP7BJfOslA-vle4loE3-oStZGZ3mTMdlK2ZTbwuJa_-w/exec",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+
+name: document.querySelector(
+'input[placeholder="Full Name"]'
+).value,
+
+phone: document.querySelector(
+'input[placeholder="WhatsApp Number"]'
+).value,
+
+email: document.querySelector(
+'input[placeholder="Email Address"]'
+).value,
+
+goal:
+document.querySelectorAll("select")[1].value,
+
+plan: planName,
+
+payment_id:
+response.razorpay_payment_id
+
+})
+
+}
+
+);
 
 alert("Payment Successful");
-
-// OPTIONAL
 
 window.location.href =
 "thankyou.html";
