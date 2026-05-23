@@ -39,7 +39,11 @@ One decision. One commitment. A stronger you.
 
 <form id="fitnessForm">
 
-<input type="text" placeholder="Full Name" required>
+<input
+type="text"
+placeholder="Full Name"
+required
+>
 
 <input type="number" placeholder="Age" required>
 
@@ -50,10 +54,16 @@ One decision. One commitment. A stronger you.
 <option>Other</option>
 </select>
 
-<input type="text" placeholder="WhatsApp Number" required>
-
-<input type="email" placeholder="Email Address" required>
-
+<input
+type="tel"
+placeholder="WhatsApp Number"
+required
+>
+<input
+type="email"
+placeholder="Email Address"
+required
+>
 <h3>GOALS</h3>
 
 <select required>
@@ -162,11 +172,27 @@ I confirm the information shared is accurate and understand results depend on co
 </label>
 
 <label class="plan-card">
-<input type="radio" name="plan" value="49999" data-plan="Nutrition/Workout - Annually">
-<div>
-<h4>Nutrition/Workout - Annually</h4>
-<p>₹49,999</p>
-</div>
+
+<input
+type="radio"
+name="plan"
+value="25000"
+data-plan="Nutrition/Workout Annual"
+>
+
+<h4>Nutrition/Workout - Annual</h4>
+
+<p>₹25,000</p>
+
+<span class="installment">
+Total: ₹49,999
+</span>
+
+<span class="installment">
+Remaining:
+₹24,999
+</span>
+
 </label>
 
 <label class="plan-card">
@@ -178,31 +204,81 @@ I confirm the information shared is accurate and understand results depend on co
 </label>
 
 <label class="plan-card">
-<input type="radio" name="plan" value="25999" data-plan="Workout + Nutrition - Quarterly">
-<div>
+
+<input
+type="radio"
+name="plan"
+value="25000"
+data-plan="Workout + Nutrition Quarterly"
+>
+
 <h4>Workout + Nutrition - Quarterly</h4>
-<p>₹25,999</p>
-</div>
-</label>
 
+<p>₹25,000</p>
+
+<span class="installment">
+Total: ₹25,999
+</span>
+
+<span class="installment">
+Remaining:
+₹999
+</span>
+
+</label>
 <label class="plan-card">
-<input type="radio" name="plan" value="49999" data-plan="Workout + Nutrition - Half Yearly">
-<div>
+
+<input
+type="radio"
+name="plan"
+value="25000"
+data-plan="Workout + Nutrition Half Yearly"
+>
+
 <h4>Workout + Nutrition - Half Yearly</h4>
-<p>₹49,999</p>
-</div>
-</label>
 
+<p>₹25,000</p>
+
+<span class="installment">
+Total: ₹49,999
+</span>
+
+<span class="installment">
+Remaining:
+₹24,999
+</span>
+
+</label>
 <label class="plan-card">
-<input type="radio" name="plan" value="99999" data-plan="Workout + Nutrition - Annually">
-<div>
-<h4>Workout + Nutrition - Annually</h4>
-<p>₹99,999</p>
-</div>
+
+<input
+type="radio"
+name="plan"
+value="25000"
+data-plan="Workout + Nutrition Annual"
+>
+
+<h4>Workout + Nutrition - Annual</h4>
+
+<p>₹25,000</p>
+
+<span class="installment">
+Total: ₹99,999
+</span>
+
+<span class="installment">
+Remaining:
+₹25,000 + ₹25,000 + ₹24,999
+</span>
+
 </label>
 
 </div>
+<p class="payment-note">
 
+By selecting a plan, you agree to complete all remaining installments of the chosen program.
+
+</p>
 <button type="submit" id="payBtn">
 Proceed To Payment
 </button>
