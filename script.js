@@ -1,22 +1,19 @@
-// PLAN CARD SELECTION
+// ACTIVE PLAN CARD EFFECT
 
-const plans = document.querySelectorAll(".plan-card");
+const planCards =
+document.querySelectorAll(".plan-card");
 
-plans.forEach((plan) => {
+planCards.forEach((card)=>{
 
-plan.addEventListener("click", () => {
+card.addEventListener("click",()=>{
 
-plans.forEach((p) => {
+planCards.forEach((c)=>{
 
-p.classList.remove("selected");
-
-p.style.opacity = "0.4";
+c.classList.remove("active");
 
 });
 
-plan.classList.add("selected");
-
-plan.style.opacity = "1";
+card.classList.add("active");
 
 });
 
@@ -27,13 +24,14 @@ plan.style.opacity = "1";
 document
 .getElementById("fitnessForm")
 
-.addEventListener("submit",
+.addEventListener(
+"submit",
 
 async function (e) {
 
 e.preventDefault();
 
-// SELECT PLAN
+// SELECTED INSTALLMENT
 
 const selectedPlan =
 document.querySelector(
@@ -44,7 +42,9 @@ document.querySelector(
 
 if (!selectedPlan) {
 
-alert("Please select a plan");
+alert(
+"Please select a plan/installment"
+);
 
 return;
 
@@ -84,22 +84,6 @@ document.querySelector("select").value;
 
 const sheetURL =
 "https://script.google.com/macros/s/AKfycbyNu5eVOOzXgrnye9HEUncXibSQX2szTX8UJSGg41l0ItjDdkRwa24iaY8Xw8jmJ_PZ0w/exec";
-
-// DEBUG
-
-console.log({
-
-name: fullName,
-
-phone: phone,
-
-email: email,
-
-goal: goal,
-
-plan: planName
-
-});
 
 // SAVE PENDING LEAD
 
@@ -212,19 +196,20 @@ color:"#000000"
 
 },
 
-// PAYMENT SUCCESS
+// SUCCESS PAYMENT
 
-handler: async function(response){
+handler:
+async function(response){
 
 try {
 
 await fetch(sheetURL, {
 
-method: "POST",
+method:"POST",
 
-mode: "no-cors",
+mode:"no-cors",
 
-headers: {
+headers:{
 
 "Content-Type":
 "application/json"
@@ -243,7 +228,7 @@ goal: goal,
 
 plan: planName,
 
-status: "Paid",
+status:"Paid",
 
 payment_id:
 response
@@ -293,11 +278,11 @@ try {
 
 await fetch(sheetURL, {
 
-method: "POST",
+method:"POST",
 
-mode: "no-cors",
+mode:"no-cors",
 
-headers: {
+headers:{
 
 "Content-Type":
 "application/json"
@@ -316,9 +301,9 @@ goal: goal,
 
 plan: planName,
 
-status: "Failed",
+status:"Failed",
 
-payment_id: ""
+payment_id:""
 
 })
 
@@ -345,10 +330,22 @@ alert(
 
 );
 
-// OPEN PAYMENT POPUP
+// OPEN POPUP
 
 rzp.open();
 
 }
 
+);
+window.addEventListener(
+"scroll",
+function(){
+
+const hero =
+document.querySelector(".hero");
+
+hero.style.backgroundPositionY =
+window.pageYOffset * 0.5 + "px";
+
+}
 );
