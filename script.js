@@ -173,7 +173,7 @@ await response.json();
 const options = {
 
 key:
-"rzp_test_SsJ41JxFErdV4O",
+"rzp_live_StfaTFTOBOElIi",
 
 amount:
 order.amount,
